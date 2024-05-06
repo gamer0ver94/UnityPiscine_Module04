@@ -16,7 +16,7 @@ public class test : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.D))
         {
-            anim.IsWalking = false;
+            //anim.IsWalking = false;
         }
     }
 }

@@ -9,10 +9,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float force;
     private Rigidbody2D rb;
+    private Animator anim;
+    private bool isWalking = false;
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -22,16 +25,24 @@ public class PlayerController : MonoBehaviour
         {
             rb.AddForce(Vector3.up * Time.fixedDeltaTime * force,ForceMode2D.Impulse);
         }
+        
+        print(rb.velocity.magnitude);
     }
     void FixedUpdate()
     {
         if(Input.GetKey(KeyCode.D))
         {
             rb.velocity = new Vector3(Time.fixedDeltaTime * speed, rb.velocity.y,0);
+            isWalking = true;
         }
         else if(Input.GetKey(KeyCode.A))
         {
             rb.velocity = new Vector3(-Time.fixedDeltaTime * speed, rb.velocity.y,0);
+            isWalking = true;
         }
+        else{
+            isWalking = false;
+        }
+        anim.SetBool("isWalking",isWalking);
     }
 }
