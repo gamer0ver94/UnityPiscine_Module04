@@ -24,9 +24,9 @@ public class PlayerController : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Space))
         {
             rb.AddForce(Vector3.up * Time.fixedDeltaTime * force,ForceMode2D.Impulse);
+            anim.SetBool("isJumping", true);
         }
         
-        print(rb.velocity.magnitude);
     }
     void FixedUpdate()
     {
@@ -43,6 +43,12 @@ public class PlayerController : MonoBehaviour
         else{
             isWalking = false;
         }
-        anim.SetBool("isWalking",isWalking);
     }
+
+    public void OnCollisionEnter2D(Collision2D collision)
+    {
+            anim.SetBool("isJumping", false);
+            print("collision");
+    }
+
 }
