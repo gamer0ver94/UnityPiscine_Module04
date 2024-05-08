@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class LianaController : MonoBehaviour
+public class EnemyController : MonoBehaviour
 {
     private Animator anim = null;
     // Start is called before the first frame update
@@ -16,7 +16,6 @@ public class LianaController : MonoBehaviour
     void OnTriggerEnter2D(Collider2D collider)
     {
         anim.SetBool("isAttacking", true);
-        print("trigger");
     }
 
     void OnTriggerExit2D(Collider2D collider)

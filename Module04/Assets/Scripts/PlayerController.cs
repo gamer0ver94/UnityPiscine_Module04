@@ -1,16 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
     [SerializeField]
+    private float hp;
+    [SerializeField]
     private float speed;
+    public float Hp
+    {
+        get{
+            return hp;
+        }
+    }
     [SerializeField]
     private float force;
     private Rigidbody2D rb;
     private Animator anim;
-    private bool isWalking = false;
+    private float timer;
 
     private string previousDirection = "Right";
     private bool rightMove = true;
@@ -34,11 +43,19 @@ public class PlayerController : MonoBehaviour
     }
     void FixedUpdate()
     {
+        if (hp <= 0)
+        {
+            anim.SetBool("isDead", true);
+            timer += Time.deltaTime;
+            if (timer >= 3)
+            {
+                Destroy(this.gameObject);
+            }
+        }
         Flip();
         if(Input.GetKey(KeyCode.D))
         {
             rb.velocity = new Vector3(Time.fixedDeltaTime * speed, rb.velocity.y,0);
-            isWalking = true;
             // Check if need to change Direction of the sprite
             if (rightMove){
                 previousDirection = "Right";
@@ -50,7 +67,6 @@ public class PlayerController : MonoBehaviour
         else if(Input.GetKey(KeyCode.A))
         {
             rb.velocity = new Vector3(-Time.fixedDeltaTime * speed, rb.velocity.y,0);
-            isWalking = true;
             // Check if need to change Direction of the sprite
             if (!rightMove)
             {
@@ -62,7 +78,6 @@ public class PlayerController : MonoBehaviour
             rightMove = false;
         }
         else{
-            isWalking = false;
             anim.SetFloat("AxisX",0);
         }
     }
@@ -70,9 +85,10 @@ public class PlayerController : MonoBehaviour
     public void OnCollisionEnter2D(Collision2D collision)
     {
         anim.SetFloat("AxisY",0);
-        if (collision.collider.gameObject.tag == "Liana")
+        if (collision.collider.gameObject.tag == "Liana" || collision.collider.gameObject.tag == "Cactus")
         {
             anim.SetBool("isAttacked", true);
+            hp -= 1;
         }
     }
     public void OnCollisionExit2D(Collision2D collision)
