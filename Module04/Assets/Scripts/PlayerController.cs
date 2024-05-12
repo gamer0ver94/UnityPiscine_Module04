@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour
 
     private string previousDirection = "Right";
     private bool rightMove = true;
-
+    public float rayDistance = 2f;
     // Start is called before the first frame update
     void Start()
     {
@@ -34,7 +34,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Space))
+        if(Input.GetKeyDown(KeyCode.Space) && hp > 0 && IsGrounded())
         {
             rb.AddForce(Vector3.up * Time.fixedDeltaTime * force,ForceMode2D.Impulse);
             anim.SetFloat("AxisY",1);
@@ -53,25 +53,23 @@ public class PlayerController : MonoBehaviour
             }
         }
         Flip();
-        if(Input.GetKey(KeyCode.D))
+        if(Input.GetKey(KeyCode.D) && hp > 0)
         {
             rb.velocity = new Vector3(Time.fixedDeltaTime * speed, rb.velocity.y,0);
             // Check if need to change Direction of the sprite
             if (rightMove){
                 previousDirection = "Right";
-                //anim.SetFloat("AxisX",-1);
             }
             anim.SetFloat("AxisX",1);
             rightMove = true;
         }
-        else if(Input.GetKey(KeyCode.A))
+        else if(Input.GetKey(KeyCode.A) && hp > 0)
         {
             rb.velocity = new Vector3(-Time.fixedDeltaTime * speed, rb.velocity.y,0);
             // Check if need to change Direction of the sprite
             if (!rightMove)
             {
                 previousDirection = "Left";
-                //anim.SetFloat("AxisX",-1);
             }
             anim.SetFloat("AxisX",1);
             
@@ -109,4 +107,25 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    LayerMask groundLayer;
+    bool IsGrounded() {
+        Vector2 position = transform.position;
+        Vector2 direction = Vector2.down;
+
+
+        RaycastHit2D hit = Physics2D.Raycast(position, direction, rayDistance, groundLayer);
+        if (hit.collider != null) {
+            return true;
+        }
+
+        return false;
+    }
+    private void OnDrawGizmosSelected()
+    {
+            Gizmos.color = Color.red;
+            Vector3 direction = Vector3.down * rayDistance;
+
+
+            Gizmos.DrawRay(transform.position, direction);
+        }
 }
