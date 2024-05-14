@@ -24,18 +24,22 @@ public class PlayerController : MonoBehaviour
     private string previousDirection = "Right";
     private bool rightMove = true;
     public float rayDistance = 2f;
+    private AudioSource audioSource;
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Space) && hp > 0 && IsGrounded())
+        if(Input.GetKeyDown(KeyCode.Space) && hp > 0)
         {
+            audioSource.clip = SoundManager.Instance.Jump;
+            audioSource.Play();
             rb.AddForce(Vector3.up * Time.fixedDeltaTime * force,ForceMode2D.Impulse);
             anim.SetFloat("AxisY",1);
         }
